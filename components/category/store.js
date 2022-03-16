@@ -1,5 +1,6 @@
 const db = require('mongoose'),
     Model = require('./model'),
+    ProductModel = require('../product/model')
     config = require('../../config');
     
 const getCategory = async () => {

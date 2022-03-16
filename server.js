@@ -2,13 +2,16 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     config = require('./config'),
     router = require('./network/routes'),
-    connect = require('./db');
+    connect = require('./db'),
+    cors = require('cors');
+
 
 var app = express();
 
 app.use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: false }))
-    .use(express.static('public'));
+    .use(express.static('public'))
+    .use(cors());
 
 router(app);
 

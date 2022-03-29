@@ -1,5 +1,7 @@
 const express = require('express'),
     controller = require('./controller'),
+    optionController = require('../productOption/controller'),
+    {validateData} = require('./middleware')
     multer = require('multer');
 
 const router = express.Router(),
@@ -14,8 +16,10 @@ const router = express.Router(),
     upload = multer({storage: storage})
 
 router.get('/', controller.getAll);
-router.post('/', upload.single('avatar'), controller.postProduct);
 router.delete('/:id', controller.deleteProduct);
-router.put('/:id', upload.single('avatar'), controller.putProduct);
+router.post('/', upload.single('avatar'), validateData, controller.postProduct);
+router.put('/:id', upload.single('avatar'), validateData, controller.putProduct);
+
+router.post('/:productId/option', optionController.postOption);
 
 module.exports = router;

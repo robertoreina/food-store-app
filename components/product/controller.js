@@ -1,26 +1,12 @@
-const store = require('./store');
+const Product = require('./model'),
+    { sendError, sendSuccess } = require("../../utils/response");
 
 const getAll = async (req, res) => {
     try {
-
-        const product = await store.get()
-        console.log(product)
-
-        if (Object.keys(product).length === 0 || (product).length === 0) throw { status: '422', message: 'There are no products' };
-
-
-        return res.status(200).json({
-            status: 200,
-            message: "Ok",
-            product
-        });
-
+        const product = await Product.find().populate('category options options.products', {productId: 0});
+        return sendSuccess(res, product)
     } catch (error) {
-
-        return res.status(error.status || 500).json({
-            status: error.status || 500,
-            error: error.message || "Internal server error"
-        })
+        return sendError(res, error.message)
     }
 }
 
@@ -40,29 +26,19 @@ const postProduct = async (req, res) => {
             category,
             status,
         }
-        let id = await store.add(data)
+        let newProduct = await Product.create(data);
+        if (!newProduct) throw { message: 'Something went wrong, try later' };
 
-        return res.status(201).json({
-            status: 201,
-            message: `Created`,
-            body: {
-                id
-            }
-        });
+        return sendSuccess(res, { message: "create product successfull" });
 
     } catch (error) {
-
-        return res.status(error.status || 500).json({
-            status: error.status || 500,
-            error: error.message || "Internal server error"
-        })
+        return sendError(res, error.message)
     }
 }
 const putProduct = async (req, res) => {
     try {
-        console.log(req.body)
         const id = req.params.id;
-        const  { name, description, quantity, price, category, status } = req.body;
+        const { name, description, quantity, price, category, status } = req.body;
 
         let filelUrl = '';
         if (req.file) filelUrl = req.protocol + '://' + req.get('host') + '/files/' + req.file.filename;
@@ -76,39 +52,25 @@ const putProduct = async (req, res) => {
             category,
             status,
         }
-        await store.update(id, data)
+        let updProduct = await Product.findByIdAndUpdate(id, data);
+        if (!updProduct) throw { message: 'Something went wrong, try later' };
 
-        return res.status(200).json({
-            status: 200,
-            message: `Updated`
-        });
-
+        return sendSuccess(res, { message: "update product successfull" })
     } catch (error) {
-
-        return res.status(error.status || 500).json({
-            status: error.status || 500,
-            error: error.message || "Internal server error"
-        })
+        return sendError(res, error.message)
     }
 }
 
 const deleteProduct = async (req, res) => {
     try {
         const id = req.params.id;
-
-        await store.delete(id)
-
-        return res.status(200).json({
-            status: 200,
-            message: `Product removed`
-        });
-
+        
+        let deleteProduct = await Product.findByIdAndDelete(id);
+        if (!deleteProduct) throw { message: 'Something went wrong, try later' };
+        return sendSuccess(res, { message: "delete product successfull" });
+        
     } catch (error) {
-
-        return res.status(error.status || 500).json({
-            status: error.status || 500,
-            error: error.message || "Internal server error"
-        })
+        return sendError(res, error.message);
     }
 }
 

@@ -3,8 +3,7 @@ const express = require('express'),
 
 const router = express.Router();
 
-router.get('/', controller.getAll)
-router.post('/', controller.postCategory)
-router.put('/:id', controller.updateCategory)
+router.post('/login', controller.postCategory)
+router.post('/login/sendcode', controller.postCategory)
 
 module.exports = router;

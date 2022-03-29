@@ -1,6 +1,6 @@
 const db = require('mongoose'),
     Model = require('./model'),
-    ProductModel = require('../product/model')
+    ProductModel = require('../product/model'),
     config = require('../../config');
     
 const getCategory = async () => {
@@ -15,6 +15,10 @@ const getCategory = async () => {
         }))
     return data;
 }
+const getCategoryById = async (id) => {
+    let category = await Model.findById(id);
+    return category;
+}
 const addCategory = async (data) => {
     const category = await Model.create(data);
     return category._id;
@@ -27,4 +31,5 @@ module.exports = {
     get: getCategory,
     add: addCategory,
     delete: deleteCategory,
+    getById: getCategoryById
 }

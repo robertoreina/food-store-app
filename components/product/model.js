@@ -11,8 +11,14 @@ const myShema = new Schema({
     quantity: Number,
     price: Number,
     avatar: String,
-    category: {type: Schema.ObjectId , ref: "Category"},
+    category: { type: Schema.ObjectId, ref: "Category" },
     status: Boolean,
+    options: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ProductOption"
+        }
+    ],
     date: { type: Date, default: Date.now },
 })
 
